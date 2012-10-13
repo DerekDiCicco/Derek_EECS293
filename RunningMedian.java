@@ -2,7 +2,7 @@
 RunningMedian.pseudocode
 Derek DiCicco
 
-October 11, 2012
+October 18, 2012
 
 This file calculates the running median of a given set of T
 */
@@ -23,22 +23,23 @@ add(8, 9) 				|	8 and 9 are added to Parameters.
 RUNNING TIME: O(n)
 */
 
-class RunningMedian
+ public class RunningMedian
 {
 	/*Global variables*/
-	T medianLower, medianMiddle, medianHigher;
-	arrayList Parameters;
+	// T medianLower, medianMiddle, medianHigher;
+	//arrayList Parameters;
+	
 	
 	/*
 	CONSTRUCTOR: the constructor for this class takes in three values then:
 		-adds them to the Parameters array list
 		-makes the number of parameters 3
 	*/
-	RunningMedian(T a, T b, T c)
-	{
-		add to Parameters: a, b, c;
-		sort Parameters with Insertion sort;
-	}
+	// RunningMedian(T a, T b, T c)
+	// {
+		// add to Parameters: a, b, c;
+		// sort Parameters with Insertion sort;
+	// }
 	
 	/*
 	Purpose: adds two units and returns the new median values.
@@ -47,12 +48,12 @@ class RunningMedian
 		-increases the number of parameters by two
 		-calls the median method to return the new median
 	*/
-	T[] add(T a, T b)
-	{
-		add to Parameters: a, b;
-		sort Parameters using insertion sort;
-		return median();
-	}
+	// T[] add(T a, T b)
+	// {
+		// add to Parameters: a, b;
+		// sort Parameters using insertion sort;
+		// return median();
+	// }
 	
 	/*
 	Purpose: returns the median of the parameters entered
@@ -66,13 +67,13 @@ class RunningMedian
 			-that factor is the beginning of the three medians
 		-return those medians
 	*/
-	T[] median()
-	{
-		integer beginHere = (length of Parameters - 3) / 2;
-		medianLower = Parameters[beginHere];
-		medianMiddle = Parameters[beginHere + 1];
-		medianHigher = Parameters[beginHere + 2];
+	// T[] median()
+	// {
+		// integer beginHere = (length of Parameters - 3) / 2;
+		// medianLower = Parameters[beginHere];
+		// medianMiddle = Parameters[beginHere + 1];
+		// medianHigher = Parameters[beginHere + 2];
 
-		return [medianLower, medianMiddle, medianHigher];
-	}
+		// return [medianLower, medianMiddle, medianHigher];
+	// }
 }
