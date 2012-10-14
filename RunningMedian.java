@@ -20,14 +20,17 @@ median					|	[3 4 5] is returned
 add(8, 9) 				|	8 and 9 are added to Parameters.
 							[4 5 6] is returned
 
-RUNNING TIME: O(n)
+WORST CASE RUNNING TIME: O(n^2)
 */
+import java.util.*;
 
  public class RunningMedian
 {
 	/*Global variables*/
 	// T medianLower, medianMiddle, medianHigher;
+	 private int medianLower, medianMiddle, medianHigher;
 	//arrayList Parameters;
+	 private List<Integer> Parameters = new ArrayList<Integer>();
 	
 	
 	/*
@@ -36,10 +39,14 @@ RUNNING TIME: O(n)
 		-makes the number of parameters 3
 	*/
 	// RunningMedian(T a, T b, T c)
-	// {
+	 public RunningMedian(int a, int b, int c)
+	 {
 		// add to Parameters: a, b, c;
+		 Parameters.add(a);
+		 Parameters.add(b);
+		 Parameters.add(c);
 		// sort Parameters with Insertion sort;
-	// }
+	 }
 	
 	/*
 	Purpose: adds two units and returns the new median values.
@@ -49,11 +56,15 @@ RUNNING TIME: O(n)
 		-calls the median method to return the new median
 	*/
 	// T[] add(T a, T b)
-	// {
+	 public int[] add(int a, int b)
+	 {
 		// add to Parameters: a, b;
+		 Parameters.add(a);
+		 Parameters.add(b);
 		// sort Parameters using insertion sort;
 		// return median();
-	// }
+		 return median();
+	 }
 	
 	/*
 	Purpose: returns the median of the parameters entered
@@ -68,12 +79,18 @@ RUNNING TIME: O(n)
 		-return those medians
 	*/
 	// T[] median()
-	// {
+	 public int[] median()
+	 {
 		// integer beginHere = (length of Parameters - 3) / 2;
+		 int beginHere = (Parameters.size() - 3) / 2;
 		// medianLower = Parameters[beginHere];
 		// medianMiddle = Parameters[beginHere + 1];
 		// medianHigher = Parameters[beginHere + 2];
-
+		 medianLower = Parameters.get(beginHere);
+		 medianMiddle = Parameters.get(beginHere+1);
+		 medianHigher = Parameters.get(beginHere+2);
 		// return [medianLower, medianMiddle, medianHigher];
-	// }
+		 int[] medians = {medianLower,medianMiddle,medianHigher};
+		 return medians;
+	 }
 }
