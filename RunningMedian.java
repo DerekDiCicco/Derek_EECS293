@@ -46,6 +46,7 @@ import java.util.*;
 		 Parameters.add(b);
 		 Parameters.add(c);
 		// sort Parameters with Insertion sort;
+		 Collections.sort(Parameters);
 	 }
 	
 	/*
@@ -62,6 +63,7 @@ import java.util.*;
 		 Parameters.add(a);
 		 Parameters.add(b);
 		// sort Parameters using insertion sort;
+		 Collections.sort(Parameters);
 		// return median();
 		 return median();
 	 }
