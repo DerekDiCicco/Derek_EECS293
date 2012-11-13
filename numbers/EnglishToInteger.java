@@ -11,11 +11,21 @@ public class EnglishToInteger
 	
 	public void Translate(String input)
 	{
+		input = input.toLowerCase();
 		if (validSyntax(input))
 		{
 			if (isZero(input)) returnInt = 0;
+			else
+			{
+				if (isNegative(input)) makeNegative();
+				
+			}
 			
 			System.out.println(returnInt);
+		}
+		else
+		{
+			System.out.println("Error: See ErrorLog.txt for details");
 		}
 	}
 	
@@ -36,30 +46,30 @@ public class EnglishToInteger
 	
 	private int translateDigit(String digit)
 	{
-		if (digit.equals("one") || digit.equals("One") || digit.equals("ONE")) return 1;
-		else if (digit.equals("two") || digit.equals("Two") || digit.equals("TWO")) return 2;
-		else if (digit.equals("three") || digit.equals("Three") || digit.equals("THREE")) return 3;
-		else if (digit.equals("four") || digit.equals("Four") || digit.equals("FOUR")) return 4;
-		else if (digit.equals("five") || digit.equals("Five") || digit.equals("FIVE")) return 5;
-		else if (digit.equals("six") || digit.equals("Six") || digit.equals("SIX")) return 6;
-		else if (digit.equals("seven") || digit.equals("Seven") || digit.equals("SEVEN")) return 7;
-		else if (digit.equals("eight") || digit.equals("Eight") || digit.equals("EIGHT")) return 8;
-		else if (digit.equals("nine") || digit.equals("Nine") || digit.equals("NINE")) return 9;
+		if (digit.equals("one")) return 1;
+		else if (digit.equals("two")) return 2;
+		else if (digit.equals("three")) return 3;
+		else if (digit.equals("four")) return 4;
+		else if (digit.equals("five")) return 5;
+		else if (digit.equals("six")) return 6;
+		else if (digit.equals("seven")) return 7;
+		else if (digit.equals("eight")) return 8;
+		else if (digit.equals("nine")) return 9;
 		else return 0;
 	}
 	
 	private int translateTeen(String teen)
 	{
-		if (teen.equals("ten") || teen.equals("Ten") || teen.equals("TEN")) return 10;
-		else if (teen.equals("eleven") || teen.equals("Eleven") || teen.equals("ELEVEN")) return 11;
-		else if (teen.equals("twelve") || teen.equals("Twelve") || teen.equals("TWELVE")) return 12;
-		else if (teen.equals("thirteen") || teen.equals("Thirteen") || teen.equals("THIRTEEN")) return 13;
-		else if (teen.equals("fourteen") || teen.equals("Fourteen") || teen.equals("FOURTEEN")) return 14;
-		else if (teen.equals("fifteen") || teen.equals("Fifteen") || teen.equals("FIFTEEN")) return 15;
-		else if (teen.equals("sixteen") || teen.equals("Sixteen") || teen.equals("SIXTEEN")) return 16;
-		else if (teen.equals("seventeen") || teen.equals("Seventeen") || teen.equals("SEVENTEEN")) return 17;
-		else if (teen.equals("eighteen") || teen.equals("Eighteen") || teen.equals("EIGHTEEN")) return 18;
-		else if (teen.equals("nineteen") || teen.equals("Nineteen") || teen.equals("NINETEEN")) return 19;
+		if (teen.equals("ten")) return 10;
+		else if (teen.equals("eleven")) return 11;
+		else if (teen.equals("twelve")) return 12;
+		else if (teen.equals("thirteen")) return 13;
+		else if (teen.equals("fourteen")) return 14;
+		else if (teen.equals("fifteen")) return 15;
+		else if (teen.equals("sixteen")) return 16;
+		else if (teen.equals("seventeen")) return 17;
+		else if (teen.equals("eighteen")) return 18;
+		else if (teen.equals("nineteen")) return 19;
 		else return 0;
 	}
 	
@@ -71,6 +81,12 @@ public class EnglishToInteger
 	private int thousandAmount(int prefixAmount)
 	{
 		return prefixAmount * 1000;
+	}
+	
+	private boolean isNegative(String input)
+	{
+		if (input.startsWith("minus") || input.startsWith("negative")) return true;
+		else return false;
 	}
 	
 	private void makeNegative()
