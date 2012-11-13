@@ -2,7 +2,7 @@
 public class EnglishToInteger 
 {
 	private int returnInt;
-	private boolean isNegative;
+	private boolean isNegative, validSyntax;
 	
 	public EnglishToInteger()
 	{
@@ -12,12 +12,14 @@ public class EnglishToInteger
 	public void Translate(String input)
 	{
 		input = input.toLowerCase();
-		if (validSyntax(input))
+		String[] words = input.split(" ");
+		checkSyntax(words);
+		if (validSyntax)
 		{
-			if (isZero(input)) returnInt = 0;
+			if (isZero(words[0])) returnInt = 0;
 			else
 			{
-				if (isNegative(input)) makeNegative();
+				if (isNegative(words)) makeNegative();
 				
 			}
 			
@@ -29,19 +31,35 @@ public class EnglishToInteger
 		}
 	}
 	
-	private boolean validSyntax(String input)
+	private void checkSyntax(String[] words)
 	{
 		boolean millionCount = false;
 		boolean thousandCount = false;
 		boolean hundredCount = false;
 		boolean tenCount = false;
+		
+		
 	}
 	
-	private int prefixAmount(String prefix)
+	private int prefixAmount(String[] prefix)
 	{
 		int total = 0;
 		
 		return total;
+	}
+	
+	private boolean isDigit(String input)
+	{
+		if (input.equals("one")
+				|| input.equals("two")
+				|| input.equals("three")
+				|| input.equals("four")
+				|| input.equals("five")
+				|| input.equals("six")
+				|| input.equals("seven")
+				|| input.equals("eight")
+				|| input.equals("nine")) return true;
+		else return false;
 	}
 	
 	private int translateDigit(String digit)
@@ -56,6 +74,21 @@ public class EnglishToInteger
 		else if (digit.equals("eight")) return 8;
 		else if (digit.equals("nine")) return 9;
 		else return 0;
+	}
+	
+	private boolean isTeen(String input)
+	{
+		if (input.equals("ten")
+				|| input.equals("eleven")
+				|| input.equals("twelve")
+				|| input.equals("thirteen")
+				|| input.equals("fouteen")
+				|| input.equals("fifteen")
+				|| input.equals("sixteen")
+				|| input.equals("seventeen")
+				|| input.equals("eighteen")
+				|| input.equals("nineteen")) return true;
+		else return false;
 	}
 	
 	private int translateTeen(String teen)
@@ -83,9 +116,9 @@ public class EnglishToInteger
 		return prefixAmount * 1000;
 	}
 	
-	private boolean isNegative(String input)
+	private boolean isNegative(String[] input)
 	{
-		if (input.startsWith("minus") || input.startsWith("negative")) return true;
+		if (input[0].equals("minus") || input[0].equals("negative")) return true;
 		else return false;
 	}
 	
