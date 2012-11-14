@@ -1,12 +1,21 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.Writer;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class EnglishToInteger 
 {
 	private int returnInt;
 	private boolean isNegative, validSyntax;
+	Writer errorWriter;
 	
 	public EnglishToInteger()
 	{
 		returnInt = 0;
+		//create error log file
+		File errorFile = new File("ErrorLog.txt");
 	}
 	
 	public void Translate(String input)
@@ -37,8 +46,48 @@ public class EnglishToInteger
 		boolean thousandCount = false;
 		boolean hundredCount = false;
 		boolean tenCount = false;
+		boolean minusCount = false;
 		
-		
+		//first, make sure every word is recognized
+		for (String str : words)
+		{
+			if (!recognizeWord(str))
+			{
+				validSyntax = false;
+				logError("Input '" + str + "' is invalid.");
+				return;
+			}
+		}
+		if (words.length == 1)
+		{
+			if (isZero(words[0])
+				|| isDigit(words[0])
+				|| isTeen(words[0]))
+			{
+				validSyntax = true;
+				return;
+			}
+			else
+			{
+				validSyntax =  false;
+				logError("Input '" + words[0] + "' cannot stand on its own.");
+				return;
+			}
+		}
+		else if (words.length > 1)
+		{
+			//search through entire phrase, detecting patterns
+			for (String str : words)
+			{
+				
+			}
+		}
+		else
+		{
+			validSyntax =  false;
+			logError("No input.");
+			return;
+		}
 	}
 	
 	private int prefixAmount(String[] prefix)
@@ -106,6 +155,32 @@ public class EnglishToInteger
 		else return 0;
 	}
 	
+	private boolean isTensValue(String input)
+	{
+		if (input.equals("twenty")
+				|| input.equals("thirty")
+				|| input.equals("forty")
+				|| input.equals("fifty")
+				|| input.equals("sixty")
+				|| input.equals("seventy")
+				|| input.equals("eighty")
+				|| input.equals("ninety")) return true;
+		else return false;
+	}
+	
+	private int translateTensValue(String teen)
+	{
+		if (teen.equals("twenty")) return 20;
+		else if (teen.equals("thirty")) return 30;
+		else if (teen.equals("forty")) return 40;
+		else if (teen.equals("fifty")) return 50;
+		else if (teen.equals("sixty")) return 60;
+		else if (teen.equals("seventy")) return 70;
+		else if (teen.equals("eighty")) return 80;
+		else if (teen.equals("ninety")) return 90;
+		else return 0;
+	}
+	
 	private int multiplyMillion(int prefixAmount)
 	{
 		return prefixAmount * 1000000;
@@ -130,11 +205,48 @@ public class EnglishToInteger
 	private boolean isZero(String input)
 	{
 		if (input.equals("zero")
-				|| input.equals("Zero")
-				|| input.equals("ZERO")
-				|| input.equals("naught")
-				|| input.equals("Naught")
-				|| input.equals("NAUGHT")) return true;
+			|| input.equals("naught")) return true;
 		else return false;
+	}
+	
+	private boolean recognizeWord(String input)
+	{
+		if (isDigit(input)
+			|| isTeen(input)
+			|| isTensValue(input)
+			|| isZero(input)
+			|| input.equals("minus")
+			|| input.equals("negative")
+			|| input.equals("hundred")
+			|| input.equals("thousand")
+			|| input.equals("million")) return true;
+		else return false;
+	}
+	
+	private void logError(String errorMessage)
+	{
+		try
+		{
+			errorWriter = new BufferedWriter(new FileWriter("ErrorLog.txt"));
+			errorWriter.write("ERROR: " + errorMessage);
+		}
+		catch (FileNotFoundException e) 
+		{
+            e.printStackTrace();
+        } 
+		catch (IOException e) 
+		{
+            e.printStackTrace();
+        } finally 
+        {
+        	try
+        	{
+        		errorWriter.close();
+        	}
+        	catch (IOException e)
+        	{
+        		e.printStackTrace();
+        	}
+        }
 	}
 }
