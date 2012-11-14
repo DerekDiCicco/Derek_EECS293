@@ -42,11 +42,8 @@ public class EnglishToInteger
 	
 	private void checkSyntax(String[] words)
 	{
-		boolean millionCount = false;
-		boolean thousandCount = false;
-		boolean hundredCount = false;
-		boolean tenCount = false;
-		boolean minusCount = false;
+		boolean millionRead = false;
+		boolean thousandRead = false;
 		
 		//first, make sure every word is recognized
 		for (String str : words)
@@ -76,10 +73,81 @@ public class EnglishToInteger
 		}
 		else if (words.length > 1)
 		{
+			String prefix = "";
 			//search through entire phrase, detecting patterns
-			for (String str : words)
+			for (int i = 0; i < words.length; i++)
 			{
-				
+				//if the word is part of a prefix, pass it on to the prefix checker
+				if (isDigit(words[i])) prefix = prefix + " " + words[i];
+				else if (isTeen(words[i])) prefix = prefix + " " + words[i];
+				else if (isTensValue(words[i])) prefix = prefix + " " + words[i];
+				else if (words[i].equals("hundred")) prefix = prefix + " " + words[i];
+				//if million or thousand, make sure it hasn't already been used
+				//then check its prefix
+				else if (words[i].equals("thousand"))
+				{
+					if (!thousandRead)
+					{
+						if (!isValidPrefix(prefix))
+						{
+							validSyntax =  false;
+							logError("Invalid prefix '" + prefix + "'.");
+							return;
+						}
+						else prefix = "";//reset prefix
+						thousandRead = true;//so it cannot be used again
+					}
+					else
+					{
+						validSyntax =  false;
+						logError("Cannot use 'thousand' more than once.");
+						return;
+					}
+				}
+				else if (words[i].equals("million"))
+				{
+					if (!millionRead)
+					{
+						if (!isValidPrefix(prefix))
+						{
+							validSyntax =  false;
+							logError("Invalid prefix '" + prefix + "'.");
+							return;
+						}
+						else prefix = "";//reset prefix
+						millionRead = true;//so it cannot be used again
+					}
+					else
+					{
+						validSyntax =  false;
+						logError("Cannot use 'million' more than once.");
+						return;
+					}
+				}
+				//zero must be on its own
+				else if (isZero(words[i]))
+				{
+					validSyntax =  false;
+					logError("'Zero' must stand on its own.");
+					return;
+				}
+				//minus can only come first
+				else if (words[i].equals("minus") || words[i].equals("negative"))
+				{
+					if (i != 0)
+					{
+						validSyntax =  false;
+						logError("Cannot use 'minus' or 'negatve' unless it is the first word");
+						return;
+					}
+				}
+			}
+			//check that last part (after thousand and million, or if they do not appear) is valid
+			if (!isValidPrefix(prefix))
+			{
+				validSyntax =  false;
+				logError("Invalid string '" + prefix + "'.");
+				return;
 			}
 		}
 		else
@@ -88,6 +156,70 @@ public class EnglishToInteger
 			logError("No input.");
 			return;
 		}
+	}
+	
+	private boolean isValidPrefix(String prefix)
+	{
+		boolean hundredRead = false;
+		String[] words = prefix.split(" ");
+		//search through entire phrase, detecting patterns
+		for (int i = 0; i < words.length; i++)
+		{
+			if (isDigit(words[i]))
+			{
+				if (i != 0)//to prevent null pointer exception
+				{
+					//if a teen or digit is before the digit
+					if (isTeen(words[i-1]) || isDigit(words[i-1])) return false;
+				}
+				if (i != words.length - 1)//to prevent null pointer exception
+				{
+					//if a teen or digit is after the digit
+					if (isTeen(words[i+1]) || isDigit(words[i+1])) return false;
+				}
+			}
+			else if (isTeen(words[i]))
+			{
+				if (i != 0)//to prevent null pointer exception
+				{
+					//if a teen or digit is before the teen
+					if (isTeen(words[i-1]) || isDigit(words[i-1])) return false;
+				}
+				if (i != words.length - 1)//to prevent null pointer exception
+				{
+					//if a teen or digit is after the teen
+					if (isTeen(words[i+1]) || isDigit(words[i+1])) return false;
+				}
+			}
+			else if (isTensValue(words[i]))
+			{
+				if (i != 0)//to prevent null pointer exception
+				{
+					//if a teen or digit is before the teen
+					if (isTensValue(words[i-1]) || isDigit(words[i-1])) return false;
+				}
+				if (i != words.length - 1)//to prevent null pointer exception
+				{
+					//if a teen is after the teen
+					if (isTensValue(words[i+1])) return false;
+				}
+			}
+			else if (words[i].equals("hundred"))
+			{
+				if (i == 0) return false;//hundred needs digit before it
+				else 
+				{
+					if (!hundredRead)
+					{
+						//if a teen or tens value is before it
+						if (isTeen(words[i-1]) || isTensValue(words[i-1])) return false;
+						hundredRead = true;
+					}
+					else return false;
+				}
+			}
+		}
+		return true;
 	}
 	
 	private int prefixAmount(String[] prefix)
@@ -189,6 +321,11 @@ public class EnglishToInteger
 	private int thousandAmount(int prefixAmount)
 	{
 		return prefixAmount * 1000;
+	}
+	
+	private int hundredAmount(int prefixAmount)
+	{
+		return prefixAmount * 100;
 	}
 	
 	private boolean isNegative(String[] input)
