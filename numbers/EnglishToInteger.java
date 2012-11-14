@@ -8,7 +8,7 @@ import java.io.IOException;
 public class EnglishToInteger 
 {
 	private int returnInt;
-	private boolean isNegative, validSyntax;
+	private boolean validSyntax;
 	Writer errorWriter;
 	
 	public EnglishToInteger()
@@ -28,8 +28,28 @@ public class EnglishToInteger
 			if (isZero(words[0])) returnInt = 0;
 			else
 			{
+				String prefix = "";
+				for (String str : words)
+				{
+					if (isDigit(str) || isTeen(str) || isTensValue(str) || str.equals("hundred"))
+					{
+						prefix = prefix + " " + str;
+					}
+					else if (str.equals("million"))
+					{
+						returnInt += multiplyMillion(prefixAmount(prefix));
+						prefix = "";//reset prefix
+					}
+					else if (str.equals("thousand"))
+					{
+						returnInt += multiplyThousand(prefixAmount(prefix));
+						prefix = "";//reset prefix
+					}
+				}
+				//add up final prefix
+				returnInt += prefixAmount(prefix);
+				//make negative if necessary
 				if (isNegative(words)) makeNegative();
-				
 			}
 			
 			System.out.println(returnInt);
@@ -86,6 +106,13 @@ public class EnglishToInteger
 				//then check its prefix
 				else if (words[i].equals("thousand"))
 				{
+					//needs prefix
+					if (i == 0)
+					{
+						validSyntax =  false;
+						logError("'Thousand' needs a prefix.");
+						return;
+					}
 					if (!thousandRead)
 					{
 						if (!isValidPrefix(prefix))
@@ -106,6 +133,13 @@ public class EnglishToInteger
 				}
 				else if (words[i].equals("million"))
 				{
+					//needs prefix
+					if (i == 0)
+					{
+						validSyntax =  false;
+						logError("'Million' needs a prefix.");
+						return;
+					}
 					if (!millionRead)
 					{
 						if (!isValidPrefix(prefix))
@@ -156,6 +190,7 @@ public class EnglishToInteger
 			logError("No input.");
 			return;
 		}
+		validSyntax = true;
 	}
 	
 	private boolean isValidPrefix(String prefix)
@@ -222,10 +257,24 @@ public class EnglishToInteger
 		return true;
 	}
 	
-	private int prefixAmount(String[] prefix)
+	private int prefixAmount(String prefix)
 	{
 		int total = 0;
-		
+		String [] words = prefix.split(" ");
+		//scan through array and calculate
+		for (int i = 0; i < words.length; i++)
+		{
+			if (isDigit(words[i]))
+			{
+				//last word, single digit
+				if (i == words.length - 1) total += translateDigit(words[i]);
+				//otherwise it should be followed by 'hundred'
+				else total += multiplyHundred(translateDigit(words[i]));
+			}
+			else if (isTeen(words[i])) total += translateTeen(words[i]);
+			else if (isTensValue(words[i])) total += translateTensValue(words[i]);
+			//otherwise it's 'hundred', so skip
+		}
 		return total;
 	}
 	
@@ -318,12 +367,12 @@ public class EnglishToInteger
 		return prefixAmount * 1000000;
 	}
 	
-	private int thousandAmount(int prefixAmount)
+	private int multiplyThousand(int prefixAmount)
 	{
 		return prefixAmount * 1000;
 	}
 	
-	private int hundredAmount(int prefixAmount)
+	private int multiplyHundred(int prefixAmount)
 	{
 		return prefixAmount * 100;
 	}
@@ -336,7 +385,7 @@ public class EnglishToInteger
 	
 	private void makeNegative()
 	{
-		returnInt = -1;
+		returnInt *= -1;
 	}
 	
 	private boolean isZero(String input)
