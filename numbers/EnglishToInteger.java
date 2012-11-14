@@ -1,24 +1,21 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.io.Writer;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class EnglishToInteger 
 {
 	private int returnInt;
 	private boolean validSyntax;
-	Writer errorWriter;
+	FileWriter errorWriter;
+	//BufferedWriter errorWriter;
 	
 	public EnglishToInteger()
 	{
 		returnInt = 0;
-		//create error log file
-		File errorFile = new File("ErrorLog.txt");
 	}
 	
-	public void Translate(String input)
+	public int Translate(String input) throws IllegalArgumentException
 	{
 		input = input.toLowerCase();
 		String[] words = input.split(" ");
@@ -51,13 +48,13 @@ public class EnglishToInteger
 				//make negative if necessary
 				if (isNegative(words)) makeNegative();
 			}
-			
-			System.out.println(returnInt);
+			return returnInt;
 		}
 		else
 		{
-			System.out.println("Error: See ErrorLog.txt for details");
+			throw new IllegalArgumentException();
 		}
+		
 	}
 	
 	private void checkSyntax(String[] words)
@@ -79,7 +76,8 @@ public class EnglishToInteger
 		{
 			if (isZero(words[0])
 				|| isDigit(words[0])
-				|| isTeen(words[0]))
+				|| isTeen(words[0])
+				|| isTensValue(words[0]))
 			{
 				validSyntax = true;
 				return;
@@ -218,12 +216,12 @@ public class EnglishToInteger
 				if (i != 0)//to prevent null pointer exception
 				{
 					//if a teen or digit is before the teen
-					if (isTeen(words[i-1]) || isDigit(words[i-1])) return false;
+					if (isTeen(words[i-1]) || isDigit(words[i-1]) || isTensValue(words[i-1])) return false;
 				}
 				if (i != words.length - 1)//to prevent null pointer exception
 				{
 					//if a teen or digit is after the teen
-					if (isTeen(words[i+1]) || isDigit(words[i+1])) return false;
+					if (isTeen(words[i+1]) || isDigit(words[i+1]) || isTensValue(words[i+1])) return false;
 				}
 			}
 			else if (isTensValue(words[i]))
@@ -312,7 +310,7 @@ public class EnglishToInteger
 				|| input.equals("eleven")
 				|| input.equals("twelve")
 				|| input.equals("thirteen")
-				|| input.equals("fouteen")
+				|| input.equals("fourteen")
 				|| input.equals("fifteen")
 				|| input.equals("sixteen")
 				|| input.equals("seventeen")
@@ -413,8 +411,12 @@ public class EnglishToInteger
 	{
 		try
 		{
-			errorWriter = new BufferedWriter(new FileWriter("ErrorLog.txt"));
-			errorWriter.write("ERROR: " + errorMessage);
+			errorWriter = new FileWriter("ErrorLog.txt",true);
+			PrintWriter text = new PrintWriter(errorWriter);
+			text.println("ERROR: " + errorMessage);
+//			errorWriter = new BufferedWriter(new FileWriter("ErrorLog.txt"));
+//			errorWriter.write("ERROR: " + errorMessage);
+//			errorWriter.newLine();
 		}
 		catch (FileNotFoundException e) 
 		{
