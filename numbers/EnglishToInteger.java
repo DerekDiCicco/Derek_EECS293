@@ -14,11 +14,10 @@ public class EnglishToInteger
 	 *****************************************************************************************/
 	
 	/**
-	 * Sets initial integer to zero
+	 * Empty constructor
 	 */
 	public EnglishToInteger()
 	{
-		returnInt = 0;
 	}
 	
 	/**
@@ -31,6 +30,7 @@ public class EnglishToInteger
 	 */
 	public int Translate(String input) throws IllegalArgumentException
 	{
+		returnInt = 0;//reset
 		input = input.toLowerCase();
 		String[] words = input.split(" ");
 		checkSyntax(words);
@@ -475,7 +475,7 @@ public class EnglishToInteger
 				else if (isZero(words[i]))
 				{
 					validSyntax =  false;
-					logError("'Zero' must stand on its own.");
+					logError("'Zero' or 'naught' must stand on its own.");
 					return;
 				}
 				//minus can only come first
