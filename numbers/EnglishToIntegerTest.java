@@ -179,4 +179,62 @@ public class EnglishToIntegerTest {
 		assertEquals(-507600011,EtI.Translate("negative five hundred seven million six hundred thousand eleven"),0);
 		assertEquals(-999999999,EtI.Translate("minus nine hundred ninety nine million nine hundred ninety nine thousand nine hundred ninety nine"),0);
 	}
+	
+	/********************************************************
+	 * This is where we test incorrect inputs
+	 *******************************************************/
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testUnrecognizedInput()
+	{
+		int fail = EtI.Translate("Kevin");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testHundredHundred()
+	{
+		int fail = EtI.Translate("one thousand four hundred eight hundred");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testThousandThousand()
+	{
+		int fail = EtI.Translate("four million eight hundred thousand nine thousand three");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testMillionMillion()
+	{
+		int fail = EtI.Translate("seven million nine hundred thousand four million eighteen");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testZeroThenNumber()
+	{
+		int fail = EtI.Translate("zero fourteen");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testZeroWithinNumber()
+	{
+		int fail = EtI.Translate("five hundred eighty naught three");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testZeroAfterNumber()
+	{
+		int fail = EtI.Translate("ninety six zero");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testMinusTwice()
+	{
+		int fail = EtI.Translate("minus negative four");
+	}
+	
+	@Test (expected=IllegalArgumentException.class)
+	public void testMinusWithinNumber()
+	{
+		int fail = EtI.Translate("six hundred thirty negative eight");
+	}
 }
