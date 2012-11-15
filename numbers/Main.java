@@ -31,7 +31,15 @@ public class Main {
 	    }
 		for (String input : lines)
 		{
-			System.out.println(translator.Translate(input));
+			try
+			{
+				System.out.println(translator.Translate(input));
+			}
+			catch (IllegalArgumentException e)
+			{
+				System.out.println("Error: See ErrorLog.txt for details");
+				System.exit(7);
+			}
 		}
 	}
 
