@@ -11,28 +11,11 @@ public class Main {
 		EnglishToInteger translator = new EnglishToInteger();
 		Scanner in = new Scanner(System.in);
 		
-		/***********************************************
-		 * This commented section is for singular inputs
-		 **********************************************/
-//			try
-//			{
-//				String input = in.nextLine();
-//				System.out.println(translator.Translate(input));
-//			}
-//			catch (IllegalArgumentException e)
-//			{
-//				System.out.println("Error: See ErrorLog.txt for details");
-//			}
-		
-		ArrayList<String> lines = new ArrayList<String>();
-		while (in.hasNext()) 
-		{
-			lines.add(in.nextLine());
-	    }
-		for (String input : lines)
+		while (in.hasNext())
 		{
 			try
 			{
+				String input = in.nextLine();
 				System.out.println(translator.Translate(input));
 			}
 			catch (IllegalArgumentException e)
